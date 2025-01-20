@@ -36,7 +36,86 @@ public class Main {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
+            } else if (option == 3) {
+                try {
+                    blender.increaseSpeed();
+                    System.out.println("Velocidad incrementada. Velocidad actual: " + blender.getCurrentSpeed());
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (option == 4) {
+                System.out.println("Velocidad actual: " + blender.getCurrentSpeed());
+            } else if (option == 5) {
+                System.out.println("¿La licuadora está llena? " + (blender.isFull() ? "Sí" : "No"));
+            } else if (option == 6) {
+                blender.emptyBlender();
+                System.out.println("La licuadora ha sido vaciada.");
+            } else if (option == 7) {
+                System.out.println("Saliendo del programa...");
+            } else {
+                System.out.println("Opción inválida.");
             }
         }
+
+        scanner.close();
+    }
+}
+
+interface Blender {
+    void turnOn();
+    void addContent(String content);
+    void increaseSpeed();
+    int getCurrentSpeed();
+    boolean isFull();
+    void emptyBlender();
+}
+
+class BasicBlender implements Blender {
+    private boolean isOn = false;
+    private int currentSpeed = 0;
+    private String content = null;
+
+    @Override
+    public void turnOn() {
+        isOn = true;
+    }
+
+    @Override
+    public void addContent(String content) {
+        if (!isOn) {
+            throw new IllegalStateException("La licuadora debe estar encendida para agregar contenido.");
+        }
+        this.content = content;
+    }
+
+    @Override
+    public void increaseSpeed() {
+        if (!isOn) {
+            throw new IllegalStateException("La licuadora debe estar encendida para aumentar la velocidad.");
+        }
+        if (content == null) {
+            throw new IllegalStateException("La licuadora no puede funcionar vacía.");
+        }
+        if (currentSpeed < 10) {
+            currentSpeed++;
+        } else {
+            throw new IllegalStateException("La velocidad máxima es 10.");
+        }
+    }
+
+    @Override
+    public int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    @Override
+    public boolean isFull() {
+        return content != null;
+    }
+
+    @Override
+    public void emptyBlender() {
+        content = null;
+        currentSpeed = 0;
     }
 }
